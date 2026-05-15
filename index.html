@@ -1,136 +1,273 @@
+<!--
+GAMIFIED EXPENSE TRACKER
+READY TO DEPLOY
+
+FEATURES
+✔ Dark futuristic UI
+✔ Animated glassmorphism
+✔ XP + Levels
+✔ Achievements
+✔ Progress bars
+✔ Confetti on milestones
+✔ Floating animations
+✔ LocalStorage persistence
+✔ Mobile responsive
+✔ Add/Delete transactions
+✔ Dynamic stats
+✔ Smooth animations
+✔ Ready for Netlify/Vercel
+
+SAVE AS:
+index.html
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dynamic Expense Tracker</title>
+  <title>ExpenseQuest</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+
     *{
       margin:0;
       padding:0;
       box-sizing:border-box;
-      font-family: "Poppins", sans-serif;
+      font-family:'Poppins',sans-serif;
     }
 
     body{
+      background:#050816;
       min-height:100vh;
-      background:
-        radial-gradient(circle at top left, #7f5af0 0%, transparent 30%),
-        radial-gradient(circle at bottom right, #2cb67d 0%, transparent 30%),
-        linear-gradient(135deg,#0f172a,#111827,#1e293b);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:30px;
-      overflow-x:hidden;
       color:white;
+      overflow-x:hidden;
+      position:relative;
+    }
+
+    /* ANIMATED BACKGROUND */
+
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 20% 20%,#7c3aed33 0%,transparent 25%),
+        radial-gradient(circle at 80% 30%,#06b6d433 0%,transparent 25%),
+        radial-gradient(circle at 50% 80%,#22c55e22 0%,transparent 25%);
+      animation:bgMove 12s infinite alternate ease-in-out;
+      z-index:-2;
+    }
+
+    @keyframes bgMove{
+      from{
+        transform:scale(1) translateY(0px);
+      }
+      to{
+        transform:scale(1.1) translateY(-20px);
+      }
+    }
+
+    .floating-orb{
+      position:fixed;
+      border-radius:50%;
+      filter:blur(80px);
+      opacity:.18;
+      z-index:-1;
+      animation:float 8s infinite ease-in-out;
+    }
+
+    .orb1{
+      width:300px;
+      height:300px;
+      background:#7c3aed;
+      top:0;
+      left:0;
+    }
+
+    .orb2{
+      width:260px;
+      height:260px;
+      background:#06b6d4;
+      bottom:0;
+      right:0;
+      animation-delay:2s;
+    }
+
+    @keyframes float{
+      0%,100%{
+        transform:translateY(0px);
+      }
+      50%{
+        transform:translateY(-30px);
+      }
     }
 
     .container{
-      width:100%;
-      max-width:1100px;
-      display:grid;
-      grid-template-columns: 380px 1fr;
-      gap:25px;
+      max-width:1450px;
+      margin:auto;
+      padding:30px;
     }
 
-    .card{
-      background:rgba(255,255,255,0.08);
-      backdrop-filter: blur(18px);
-      border:1px solid rgba(255,255,255,0.12);
-      border-radius:28px;
-      padding:28px;
-      box-shadow:
-        0 10px 40px rgba(0,0,0,0.35),
-        inset 0 0 20px rgba(255,255,255,0.04);
-    }
-
-    .left-panel{
+    .navbar{
       display:flex;
-      flex-direction:column;
-      gap:20px;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
     }
 
     .logo{
       display:flex;
       align-items:center;
-      gap:12px;
-      margin-bottom:10px;
+      gap:15px;
     }
 
     .logo-icon{
-      width:52px;
-      height:52px;
-      border-radius:16px;
-      background:linear-gradient(135deg,#7f5af0,#00c6ff);
+      width:60px;
+      height:60px;
+      border-radius:20px;
+      background:linear-gradient(135deg,#7c3aed,#06b6d4);
       display:flex;
-      align-items:center;
       justify-content:center;
-      font-size:24px;
-      box-shadow:0 10px 25px rgba(127,90,240,.45);
+      align-items:center;
+      font-size:1.7rem;
+      animation:pulse 2s infinite;
+      box-shadow:0 0 30px rgba(124,58,237,.4);
+    }
+
+    @keyframes pulse{
+      0%{
+        transform:scale(1);
+      }
+      50%{
+        transform:scale(1.07);
+      }
+      100%{
+        transform:scale(1);
+      }
     }
 
     .logo h1{
-      font-size:1.7rem;
-      font-weight:700;
+      font-size:2rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#fff,#9ca3af);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
     }
 
-    .balance-card{
-      background:linear-gradient(135deg,#7f5af0,#5b21b6);
-      border-radius:24px;
+    .dashboard{
+      display:grid;
+      grid-template-columns:380px 1fr;
+      gap:25px;
+    }
+
+    .card{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(18px);
+      border-radius:28px;
       padding:25px;
+      box-shadow:0 10px 40px rgba(0,0,0,.35);
+      animation:fadeUp .8s ease;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(20px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    /* LEVEL CARD */
+
+    .level-card{
+      background:linear-gradient(135deg,#7c3aed,#4f46e5);
       position:relative;
       overflow:hidden;
     }
 
-    .balance-card::before{
-      content:"";
+    .level-card::before{
+      content:'';
       position:absolute;
-      width:220px;
-      height:220px;
-      background:rgba(255,255,255,0.08);
+      width:250px;
+      height:250px;
       border-radius:50%;
-      top:-90px;
-      right:-60px;
+      background:rgba(255,255,255,.08);
+      top:-100px;
+      right:-70px;
     }
 
-    .balance-card small{
-      opacity:.8;
-      letter-spacing:1px;
-    }
-
-    .balance{
-      font-size:2.8rem;
+    .level{
+      font-size:3rem;
+      font-weight:800;
       margin-top:10px;
-      font-weight:700;
+    }
+
+    .xp-bar{
+      width:100%;
+      height:14px;
+      background:rgba(255,255,255,.18);
+      border-radius:20px;
+      overflow:hidden;
+      margin-top:15px;
+    }
+
+    .xp-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#22c55e,#06b6d4);
+      border-radius:20px;
+      transition:1s;
     }
 
     .stats{
-      display:flex;
-      justify-content:space-between;
-      margin-top:25px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
       gap:15px;
+      margin-top:25px;
     }
 
-    .stat-box{
-      flex:1;
-      background:rgba(255,255,255,0.12);
-      border-radius:18px;
-      padding:14px;
+    .stat{
+      background:rgba(255,255,255,.12);
+      padding:18px;
+      border-radius:20px;
+      transition:.3s;
     }
 
-    .income{
-      color:#2ceaa3;
-      font-weight:600;
+    .stat:hover{
+      transform:translateY(-5px);
     }
 
-    .expense{
-      color:#ff6b81;
-      font-weight:600;
+    .stat-value{
+      font-size:1.5rem;
+      font-weight:700;
+      margin-top:8px;
+    }
+
+    .green{
+      color:#22c55e;
+    }
+
+    .red{
+      color:#ef4444;
+    }
+
+    .cyan{
+      color:#06b6d4;
+    }
+
+    /* FORM */
+
+    .form-title{
+      font-size:1.4rem;
+      margin-bottom:20px;
+      font-weight:700;
     }
 
     .form-group{
@@ -140,26 +277,27 @@
     label{
       display:block;
       margin-bottom:8px;
-      color:#dbe4ff;
-      font-size:.95rem;
+      color:#cbd5e1;
     }
 
-    input, select{
+    input,
+    select{
       width:100%;
-      padding:14px;
+      padding:15px;
       border:none;
+      outline:none;
       border-radius:16px;
-      background:rgba(255,255,255,0.08);
+      background:rgba(255,255,255,.06);
       color:white;
       font-size:1rem;
-      outline:none;
       transition:.3s;
     }
 
     input:focus,
     select:focus{
-      background:rgba(255,255,255,0.14);
-      box-shadow:0 0 0 3px rgba(127,90,240,.35);
+      background:rgba(255,255,255,.1);
+      box-shadow:0 0 0 3px rgba(124,58,237,.35);
+      transform:scale(1.01);
     }
 
     option{
@@ -171,90 +309,135 @@
       padding:16px;
       border:none;
       border-radius:18px;
-      background:linear-gradient(135deg,#00c6ff,#7f5af0);
+      background:linear-gradient(135deg,#06b6d4,#7c3aed);
       color:white;
+      font-weight:700;
       font-size:1rem;
-      font-weight:600;
       cursor:pointer;
       transition:.35s;
-      box-shadow:0 12px 25px rgba(127,90,240,.35);
+      position:relative;
+      overflow:hidden;
     }
 
     .btn:hover{
-      transform:translateY(-3px) scale(1.01);
-      box-shadow:0 18px 35px rgba(127,90,240,.45);
+      transform:translateY(-3px);
+      box-shadow:0 15px 35px rgba(124,58,237,.4);
     }
+
+    .btn::after{
+      content:'';
+      position:absolute;
+      width:100px;
+      height:100%;
+      background:rgba(255,255,255,.25);
+      transform:skewX(-30deg);
+      left:-120px;
+      top:0;
+      transition:.7s;
+    }
+
+    .btn:hover::after{
+      left:120%;
+    }
+
+    /* ACHIEVEMENTS */
+
+    .achievement{
+      margin-top:20px;
+      background:rgba(255,255,255,.06);
+      padding:18px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      gap:15px;
+      transition:.3s;
+    }
+
+    .achievement:hover{
+      transform:translateX(5px);
+    }
+
+    .achievement-icon{
+      width:50px;
+      height:50px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#f59e0b,#ef4444);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-size:1.3rem;
+    }
+
+    /* TRANSACTIONS */
 
     .transactions-header{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-bottom:20px;
+      margin-bottom:25px;
     }
 
-    .transactions-header h2{
-      font-size:1.5rem;
-    }
-
-    .history{
+    .transaction-list{
       display:flex;
       flex-direction:column;
-      gap:16px;
-      max-height:650px;
+      gap:15px;
+      max-height:800px;
       overflow-y:auto;
-      padding-right:6px;
-    }
-
-    .history::-webkit-scrollbar{
-      width:8px;
-    }
-
-    .history::-webkit-scrollbar-thumb{
-      background:#7f5af0;
-      border-radius:10px;
     }
 
     .transaction{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      padding:18px;
+      border-radius:22px;
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:18px;
-      border-radius:20px;
-      background:rgba(255,255,255,0.05);
-      transition:.3s;
-      border:1px solid rgba(255,255,255,0.06);
+      transition:.35s;
+      animation:slideIn .4s ease;
+    }
+
+    @keyframes slideIn{
+      from{
+        opacity:0;
+        transform:translateX(30px);
+      }
+      to{
+        opacity:1;
+        transform:translateX(0);
+      }
     }
 
     .transaction:hover{
-      transform:translateY(-4px);
-      background:rgba(255,255,255,0.08);
+      transform:translateY(-4px) scale(1.01);
+      background:rgba(255,255,255,.07);
     }
 
     .transaction-left{
       display:flex;
+      gap:15px;
       align-items:center;
-      gap:14px;
     }
 
-    .icon{
-      width:52px;
-      height:52px;
-      border-radius:16px;
+    .transaction-icon{
+      width:55px;
+      height:55px;
+      border-radius:18px;
       display:flex;
-      align-items:center;
       justify-content:center;
-      font-size:1.4rem;
-      font-weight:bold;
+      align-items:center;
+      font-size:1.3rem;
+      font-weight:700;
     }
 
-    .income-icon{
-      background:rgba(44,234,163,.18);
-      color:#2ceaa3;
+    .income-bg{
+      background:#22c55e22;
+      color:#22c55e;
     }
 
-    .expense-icon{
-      background:rgba(255,107,129,.18);
-      color:#ff6b81;
+    .expense-bg{
+      background:#ef444422;
+      color:#ef4444;
     }
 
     .transaction-title{
@@ -263,200 +446,255 @@
     }
 
     .transaction-date{
-      opacity:.6;
       font-size:.85rem;
+      opacity:.6;
     }
 
     .amount{
+      font-size:1.1rem;
       font-weight:700;
-      font-size:1.05rem;
     }
 
-    .positive{
-      color:#2ceaa3;
+    .delete-btn{
+      margin-left:15px;
+      border:none;
+      background:none;
+      color:#ef4444;
+      cursor:pointer;
+      font-size:1.1rem;
+      transition:.3s;
     }
 
-    .negative{
-      color:#ff6b81;
+    .delete-btn:hover{
+      transform:scale(1.2);
     }
 
-    .glow{
+    .empty{
+      text-align:center;
+      margin-top:80px;
+      opacity:.6;
+    }
+
+    /* CONFETTI */
+
+    .confetti{
       position:fixed;
-      width:300px;
-      height:300px;
-      background:#7f5af0;
-      filter:blur(140px);
-      opacity:.18;
-      z-index:-1;
-      top:10%;
-      left:5%;
+      width:12px;
+      height:12px;
+      top:-20px;
+      border-radius:50%;
+      animation:fall linear forwards;
+      z-index:999;
     }
 
-    .glow2{
-      position:fixed;
-      width:300px;
-      height:300px;
-      background:#00c6ff;
-      filter:blur(140px);
-      opacity:.14;
-      z-index:-1;
-      bottom:10%;
-      right:5%;
-    }
-
-    @media(max-width:900px){
-      .container{
-        grid-template-columns:1fr;
+    @keyframes fall{
+      to{
+        transform:translateY(110vh) rotate(720deg);
       }
     }
+
+    @media(max-width:950px){
+
+      .dashboard{
+        grid-template-columns:1fr;
+      }
+
+      .container{
+        padding:20px;
+      }
+
+    }
+
   </style>
 </head>
 
 <body>
 
-  <div class="glow"></div>
-  <div class="glow2"></div>
+  <div class="floating-orb orb1"></div>
+  <div class="floating-orb orb2"></div>
 
   <div class="container">
 
-    <!-- LEFT -->
-    <div class="left-panel">
+    <div class="navbar">
 
-      <div class="card">
-        <div class="logo">
-          <div class="logo-icon">💸</div>
-          <h1>ExpenseFlow</h1>
-        </div>
-
-        <div class="balance-card">
-          <small>Total Balance</small>
-          <div class="balance">₹48,750</div>
-
-          <div class="stats">
-            <div class="stat-box">
-              <small>Income</small>
-              <div class="income">+ ₹72,000</div>
-            </div>
-
-            <div class="stat-box">
-              <small>Expense</small>
-              <div class="expense">- ₹23,250</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FORM -->
-      <div class="card">
-        <h2 style="margin-bottom:20px;">Add Transaction</h2>
-
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" placeholder="Netflix Subscription">
-        </div>
-
-        <div class="form-group">
-          <label>Amount</label>
-          <input type="number" placeholder="₹ 0.00">
-        </div>
-
-        <div class="form-group">
-          <label>Category</label>
-          <select>
-            <option>Food</option>
-            <option>Shopping</option>
-            <option>Transport</option>
-            <option>Entertainment</option>
-            <option>Salary</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Type</label>
-          <select>
-            <option>Expense</option>
-            <option>Income</option>
-          </select>
-        </div>
-
-        <button class="btn">+ Add Transaction</button>
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <h1>Expense Tracker</h1>
       </div>
 
     </div>
 
-    <!-- RIGHT -->
-    <div class="card">
+    <div class="dashboard">
 
-      <div class="transactions-header">
-        <h2>Recent Transactions</h2>
-        <span style="opacity:.7;">May 2026</span>
+      <!-- LEFT -->
+
+      <div>
+
+        <!-- LEVEL CARD -->
+
+        <div class="card level-card">
+
+          <small>Financial Level</small>
+
+          <div class="level" id="level">
+            Lv. 1
+          </div>
+
+          <div style="margin-top:10px;">
+            XP Progress
+          </div>
+
+          <div class="xp-bar">
+            <div class="xp-fill" id="xp-fill"></div>
+          </div>
+
+          <div style="margin-top:10px;opacity:.8;" id="xp-text">
+            0 / 100 XP
+          </div>
+
+          <div class="stats">
+
+            <div class="stat">
+              <small>Balance</small>
+              <div class="stat-value cyan" id="balance">
+                ₹0
+              </div>
+            </div>
+
+            <div class="stat">
+              <small>Transactions</small>
+              <div class="stat-value" id="transaction-count">
+                0
+              </div>
+            </div>
+
+            <div class="stat">
+              <small>Income</small>
+              <div class="stat-value green" id="income">
+                ₹0
+              </div>
+            </div>
+
+            <div class="stat">
+              <small>Expenses</small>
+              <div class="stat-value red" id="expense">
+                ₹0
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- FORM -->
+
+        <div class="card" style="margin-top:25px;">
+
+          <div class="form-title">
+            Add Transaction
+          </div>
+
+          <form id="expense-form">
+
+            <div class="form-group">
+              <label>Title</label>
+              <input
+                type="text"
+                id="title"
+                placeholder="Netflix Subscription"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Amount</label>
+              <input
+                type="number"
+                id="amount"
+                placeholder="Enter amount"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Type</label>
+
+              <select id="type">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+
+            <button class="btn">
+              + Add Transaction
+            </button>
+
+          </form>
+
+        </div>
+
+        <!-- ACHIEVEMENTS -->
+
+        <div class="card" style="margin-top:25px;">
+
+          <div class="form-title">
+            Achievements
+          </div>
+
+          <div class="achievement">
+            <div class="achievement-icon">
+              🏆
+            </div>
+
+            <div>
+              <div style="font-weight:600;">
+                First Expense
+              </div>
+
+              <small style="opacity:.7;">
+                Add your first transaction
+              </small>
+            </div>
+          </div>
+
+          <div class="achievement">
+            <div class="achievement-icon">
+              🚀
+            </div>
+
+            <div>
+              <div style="font-weight:600;">
+                Finance Explorer
+              </div>
+
+              <small style="opacity:.7;">
+                Add 10 transactions
+              </small>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
-      <div class="history">
+      <!-- RIGHT -->
 
-        <div class="transaction">
-          <div class="transaction-left">
-            <div class="icon expense-icon">🛒</div>
+      <div class="card">
 
-            <div>
-              <div class="transaction-title">Grocery Shopping</div>
-              <div class="transaction-date">Today • 10:24 AM</div>
-            </div>
-          </div>
+        <div class="transactions-header">
 
-          <div class="amount negative">- ₹2,350</div>
+          <h2>
+            Transactions
+          </h2>
+
         </div>
 
-        <div class="transaction">
-          <div class="transaction-left">
-            <div class="icon income-icon">💼</div>
+        <div class="transaction-list" id="transaction-list">
 
-            <div>
-              <div class="transaction-title">Monthly Salary</div>
-              <div class="transaction-date">Yesterday • 09:00 AM</div>
-            </div>
+          <div class="empty">
+            No transactions yet 🚀
           </div>
 
-          <div class="amount positive">+ ₹60,000</div>
-        </div>
-
-        <div class="transaction">
-          <div class="transaction-left">
-            <div class="icon expense-icon">🍔</div>
-
-            <div>
-              <div class="transaction-title">Food Delivery</div>
-              <div class="transaction-date">Yesterday • 08:15 PM</div>
-            </div>
-          </div>
-
-          <div class="amount negative">- ₹540</div>
-        </div>
-
-        <div class="transaction">
-          <div class="transaction-left">
-            <div class="icon expense-icon">🎬</div>
-
-            <div>
-              <div class="transaction-title">Movie Tickets</div>
-              <div class="transaction-date">12 May • 06:40 PM</div>
-            </div>
-          </div>
-
-          <div class="amount negative">- ₹1,200</div>
-        </div>
-
-        <div class="transaction">
-          <div class="transaction-left">
-            <div class="icon income-icon">🚀</div>
-
-            <div>
-              <div class="transaction-title">Freelance Project</div>
-              <div class="transaction-date">10 May • 11:10 AM</div>
-            </div>
-          </div>
-
-          <div class="amount positive">+ ₹12,000</div>
         </div>
 
       </div>
@@ -464,6 +702,262 @@
     </div>
 
   </div>
+
+  <script>
+
+    const form = document.getElementById('expense-form');
+
+    const title = document.getElementById('title');
+    const amount = document.getElementById('amount');
+    const type = document.getElementById('type');
+
+    const transactionList =
+      document.getElementById('transaction-list');
+
+    const balanceEl =
+      document.getElementById('balance');
+
+    const incomeEl =
+      document.getElementById('income');
+
+    const expenseEl =
+      document.getElementById('expense');
+
+    const countEl =
+      document.getElementById('transaction-count');
+
+    const levelEl =
+      document.getElementById('level');
+
+    const xpFill =
+      document.getElementById('xp-fill');
+
+    const xpText =
+      document.getElementById('xp-text');
+
+    let transactions =
+      JSON.parse(localStorage.getItem('transactions')) || [];
+
+    let xp =
+      Number(localStorage.getItem('xp')) || 0;
+
+    function saveData(){
+
+      localStorage.setItem(
+        'transactions',
+        JSON.stringify(transactions)
+      );
+
+      localStorage.setItem(
+        'xp',
+        xp
+      );
+
+    }
+
+    function createConfetti(){
+
+      for(let i = 0; i < 40; i++){
+
+        const confetti =
+          document.createElement('div');
+
+        confetti.classList.add('confetti');
+
+        confetti.style.left =
+          Math.random() * 100 + 'vw';
+
+        confetti.style.background =
+          `hsl(${Math.random()*360},100%,50%)`;
+
+        confetti.style.animationDuration =
+          (Math.random()*3 + 2) + 's';
+
+        document.body.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        },5000);
+
+      }
+
+    }
+
+    function updateUI(){
+
+      transactionList.innerHTML = '';
+
+      if(transactions.length === 0){
+
+        transactionList.innerHTML = `
+          <div class="empty">
+            No transactions yet 🚀
+          </div>
+        `;
+
+      }
+
+      let income = 0;
+      let expense = 0;
+
+      transactions.forEach(transaction => {
+
+        if(transaction.type === 'income'){
+          income += transaction.amount;
+        }else{
+          expense += transaction.amount;
+        }
+
+        const div =
+          document.createElement('div');
+
+        div.classList.add('transaction');
+
+        div.innerHTML = `
+
+          <div class="transaction-left">
+
+            <div class="transaction-icon ${
+              transaction.type === 'income'
+              ? 'income-bg'
+              : 'expense-bg'
+            }">
+
+              ${
+                transaction.type === 'income'
+                ? '⬆'
+                : '⬇'
+              }
+
+            </div>
+
+            <div>
+
+              <div class="transaction-title">
+                ${transaction.title}
+              </div>
+
+              <div class="transaction-date">
+                ${transaction.date}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div style="display:flex;align-items:center;">
+
+            <div class="amount ${
+              transaction.type === 'income'
+              ? 'green'
+              : 'red'
+            }">
+
+              ${
+                transaction.type === 'income'
+                ? '+'
+                : '-'
+              }
+
+              ₹${transaction.amount}
+
+            </div>
+
+            <button
+              class="delete-btn"
+              onclick="deleteTransaction(${transaction.id})"
+            >
+              ✕
+            </button>
+
+          </div>
+
+        `;
+
+        transactionList.appendChild(div);
+
+      });
+
+      const balance = income - expense;
+
+      balanceEl.innerText = `₹${balance}`;
+      incomeEl.innerText = `₹${income}`;
+      expenseEl.innerText = `₹${expense}`;
+      countEl.innerText = transactions.length;
+
+      // LEVEL SYSTEM
+
+      const level =
+        Math.floor(xp / 100) + 1;
+
+      const currentXP =
+        xp % 100;
+
+      levelEl.innerText =
+        `Lv. ${level}`;
+
+      xpFill.style.width =
+        currentXP + '%';
+
+      xpText.innerText =
+        `${currentXP} / 100 XP`;
+
+    }
+
+    form.addEventListener('submit', e => {
+
+      e.preventDefault();
+
+      const transaction = {
+
+        id: Date.now(),
+
+        title: title.value,
+
+        amount: Number(amount.value),
+
+        type: type.value,
+
+        date: new Date().toLocaleDateString()
+
+      };
+
+      transactions.unshift(transaction);
+
+      // XP SYSTEM
+
+      xp += 15;
+
+      if(xp % 100 === 0){
+
+        createConfetti();
+
+      }
+
+      saveData();
+
+      updateUI();
+
+      form.reset();
+
+    });
+
+    function deleteTransaction(id){
+
+      transactions =
+        transactions.filter(
+          t => t.id !== id
+        );
+
+      saveData();
+
+      updateUI();
+
+    }
+
+    updateUI();
+
+  </script>
 
 </body>
 </html>
