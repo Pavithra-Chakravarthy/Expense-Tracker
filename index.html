@@ -5,300 +5,465 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dynamic Expense Tracker</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <style>
     *{
       margin:0;
       padding:0;
       box-sizing:border-box;
-      font-family:Arial, sans-serif;
+      font-family: "Poppins", sans-serif;
     }
 
     body{
-      background:#f4f7fb;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top left, #7f5af0 0%, transparent 30%),
+        radial-gradient(circle at bottom right, #2cb67d 0%, transparent 30%),
+        linear-gradient(135deg,#0f172a,#111827,#1e293b);
       display:flex;
       justify-content:center;
-      padding:40px 15px;
+      align-items:center;
+      padding:30px;
+      overflow-x:hidden;
+      color:white;
     }
 
     .container{
       width:100%;
-      max-width:500px;
-      background:#fff;
-      padding:25px;
-      border-radius:15px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    h1{
-      text-align:center;
-      margin-bottom:20px;
-      color:#333;
-    }
-
-    .balance{
-      text-align:center;
-      margin-bottom:20px;
-    }
-
-    .balance h2{
-      margin-top:10px;
-      color:#1b5e20;
-      font-size:32px;
-    }
-
-    .summary{
-      display:flex;
-      justify-content:space-between;
-      margin-bottom:25px;
-      gap:10px;
+      max-width:1100px;
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap:25px;
     }
 
     .card{
+      background:rgba(255,255,255,0.08);
+      backdrop-filter: blur(18px);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:28px;
+      padding:28px;
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.35),
+        inset 0 0 20px rgba(255,255,255,0.04);
+    }
+
+    .left-panel{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .logo-icon{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#7f5af0,#00c6ff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      box-shadow:0 10px 25px rgba(127,90,240,.45);
+    }
+
+    .logo h1{
+      font-size:1.7rem;
+      font-weight:700;
+    }
+
+    .balance-card{
+      background:linear-gradient(135deg,#7f5af0,#5b21b6);
+      border-radius:24px;
+      padding:25px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .balance-card::before{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      background:rgba(255,255,255,0.08);
+      border-radius:50%;
+      top:-90px;
+      right:-60px;
+    }
+
+    .balance-card small{
+      opacity:.8;
+      letter-spacing:1px;
+    }
+
+    .balance{
+      font-size:2.8rem;
+      margin-top:10px;
+      font-weight:700;
+    }
+
+    .stats{
+      display:flex;
+      justify-content:space-between;
+      margin-top:25px;
+      gap:15px;
+    }
+
+    .stat-box{
       flex:1;
-      background:#f1f1f1;
-      padding:15px;
-      border-radius:10px;
-      text-align:center;
+      background:rgba(255,255,255,0.12);
+      border-radius:18px;
+      padding:14px;
     }
 
-    .income-text{
-      color:green;
-      margin-top:8px;
-      font-weight:bold;
+    .income{
+      color:#2ceaa3;
+      font-weight:600;
     }
 
-    .expense-text{
-      color:red;
-      margin-top:8px;
-      font-weight:bold;
+    .expense{
+      color:#ff6b81;
+      font-weight:600;
     }
 
-    form{
-      margin-bottom:25px;
+    .form-group{
+      margin-bottom:18px;
     }
 
-    form input,
-    form select,
-    form button{
+    label{
+      display:block;
+      margin-bottom:8px;
+      color:#dbe4ff;
+      font-size:.95rem;
+    }
+
+    input, select{
       width:100%;
-      padding:12px;
-      margin-bottom:12px;
-      border-radius:8px;
-      border:1px solid #ccc;
-      font-size:16px;
-    }
-
-    form button{
-      background:#1976d2;
-      color:white;
+      padding:14px;
       border:none;
+      border-radius:16px;
+      background:rgba(255,255,255,0.08);
+      color:white;
+      font-size:1rem;
+      outline:none;
+      transition:.3s;
+    }
+
+    input:focus,
+    select:focus{
+      background:rgba(255,255,255,0.14);
+      box-shadow:0 0 0 3px rgba(127,90,240,.35);
+    }
+
+    option{
+      color:black;
+    }
+
+    .btn{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:18px;
+      background:linear-gradient(135deg,#00c6ff,#7f5af0);
+      color:white;
+      font-size:1rem;
+      font-weight:600;
       cursor:pointer;
-      transition:0.3s;
+      transition:.35s;
+      box-shadow:0 12px 25px rgba(127,90,240,.35);
     }
 
-    form button:hover{
-      background:#0d47a1;
+    .btn:hover{
+      transform:translateY(-3px) scale(1.01);
+      box-shadow:0 18px 35px rgba(127,90,240,.45);
     }
 
-    .transactions h3{
-      margin-bottom:15px;
-      color:#333;
+    .transactions-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .transactions-header h2{
+      font-size:1.5rem;
+    }
+
+    .history{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      max-height:650px;
+      overflow-y:auto;
+      padding-right:6px;
+    }
+
+    .history::-webkit-scrollbar{
+      width:8px;
+    }
+
+    .history::-webkit-scrollbar-thumb{
+      background:#7f5af0;
+      border-radius:10px;
     }
 
     .transaction{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:12px;
-      margin-bottom:10px;
-      border-radius:8px;
-      background:#fafafa;
-      border-right:6px solid;
+      padding:18px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.05);
+      transition:.3s;
+      border:1px solid rgba(255,255,255,0.06);
     }
 
-    .transaction.income{
-      border-color:green;
+    .transaction:hover{
+      transform:translateY(-4px);
+      background:rgba(255,255,255,0.08);
     }
 
-    .transaction.expense{
-      border-color:red;
-    }
-
-    .left{
+    .transaction-left{
       display:flex;
-      flex-direction:column;
+      align-items:center;
+      gap:14px;
     }
 
-    .delete-btn{
-      background:red;
-      color:white;
-      border:none;
-      padding:6px 10px;
-      border-radius:5px;
-      cursor:pointer;
+    .icon{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+      font-weight:bold;
     }
 
-    .empty{
-      text-align:center;
-      color:gray;
-      margin-top:10px;
+    .income-icon{
+      background:rgba(44,234,163,.18);
+      color:#2ceaa3;
+    }
+
+    .expense-icon{
+      background:rgba(255,107,129,.18);
+      color:#ff6b81;
+    }
+
+    .transaction-title{
+      font-weight:600;
+      margin-bottom:5px;
+    }
+
+    .transaction-date{
+      opacity:.6;
+      font-size:.85rem;
+    }
+
+    .amount{
+      font-weight:700;
+      font-size:1.05rem;
+    }
+
+    .positive{
+      color:#2ceaa3;
+    }
+
+    .negative{
+      color:#ff6b81;
+    }
+
+    .glow{
+      position:fixed;
+      width:300px;
+      height:300px;
+      background:#7f5af0;
+      filter:blur(140px);
+      opacity:.18;
+      z-index:-1;
+      top:10%;
+      left:5%;
+    }
+
+    .glow2{
+      position:fixed;
+      width:300px;
+      height:300px;
+      background:#00c6ff;
+      filter:blur(140px);
+      opacity:.14;
+      z-index:-1;
+      bottom:10%;
+      right:5%;
+    }
+
+    @media(max-width:900px){
+      .container{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
+
 <body>
+
+  <div class="glow"></div>
+  <div class="glow2"></div>
 
   <div class="container">
 
-    <h1>Expense Tracker</h1>
-
-    <div class="balance">
-      <p>Your Balance</p>
-      <h2 id="balance">₹0.00</h2>
-    </div>
-
-    <div class="summary">
-      <div class="card">
-        <h4>Income</h4>
-        <p class="income-text" id="income">₹0.00</p>
-      </div>
+    <!-- LEFT -->
+    <div class="left-panel">
 
       <div class="card">
-        <h4>Expense</h4>
-        <p class="expense-text" id="expense">₹0.00</p>
+        <div class="logo">
+          <div class="logo-icon">💸</div>
+          <h1>ExpenseFlow</h1>
+        </div>
+
+        <div class="balance-card">
+          <small>Total Balance</small>
+          <div class="balance">₹48,750</div>
+
+          <div class="stats">
+            <div class="stat-box">
+              <small>Income</small>
+              <div class="income">+ ₹72,000</div>
+            </div>
+
+            <div class="stat-box">
+              <small>Expense</small>
+              <div class="expense">- ₹23,250</div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- FORM -->
+      <div class="card">
+        <h2 style="margin-bottom:20px;">Add Transaction</h2>
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" placeholder="Netflix Subscription">
+        </div>
+
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" placeholder="₹ 0.00">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select>
+            <option>Food</option>
+            <option>Shopping</option>
+            <option>Transport</option>
+            <option>Entertainment</option>
+            <option>Salary</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Type</label>
+          <select>
+            <option>Expense</option>
+            <option>Income</option>
+          </select>
+        </div>
+
+        <button class="btn">+ Add Transaction</button>
+      </div>
+
     </div>
 
-    <form id="transaction-form">
+    <!-- RIGHT -->
+    <div class="card">
 
-      <input 
-        type="text" 
-        id="description" 
-        placeholder="Enter description"
-        required
-      />
+      <div class="transactions-header">
+        <h2>Recent Transactions</h2>
+        <span style="opacity:.7;">May 2026</span>
+      </div>
 
-      <input 
-        type="number" 
-        id="amount" 
-        placeholder="Enter amount"
-        required
-      />
+      <div class="history">
 
-      <select id="type">
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
-      </select>
+        <div class="transaction">
+          <div class="transaction-left">
+            <div class="icon expense-icon">🛒</div>
 
-      <button type="submit">Add Transaction</button>
+            <div>
+              <div class="transaction-title">Grocery Shopping</div>
+              <div class="transaction-date">Today • 10:24 AM</div>
+            </div>
+          </div>
 
-    </form>
+          <div class="amount negative">- ₹2,350</div>
+        </div>
 
-    <div class="transactions">
-      <h3>Transaction History</h3>
+        <div class="transaction">
+          <div class="transaction-left">
+            <div class="icon income-icon">💼</div>
 
-      <div id="transaction-list"></div>
+            <div>
+              <div class="transaction-title">Monthly Salary</div>
+              <div class="transaction-date">Yesterday • 09:00 AM</div>
+            </div>
+          </div>
 
-      <p class="empty" id="emptyMessage">
-        No transactions added yet.
-      </p>
+          <div class="amount positive">+ ₹60,000</div>
+        </div>
+
+        <div class="transaction">
+          <div class="transaction-left">
+            <div class="icon expense-icon">🍔</div>
+
+            <div>
+              <div class="transaction-title">Food Delivery</div>
+              <div class="transaction-date">Yesterday • 08:15 PM</div>
+            </div>
+          </div>
+
+          <div class="amount negative">- ₹540</div>
+        </div>
+
+        <div class="transaction">
+          <div class="transaction-left">
+            <div class="icon expense-icon">🎬</div>
+
+            <div>
+              <div class="transaction-title">Movie Tickets</div>
+              <div class="transaction-date">12 May • 06:40 PM</div>
+            </div>
+          </div>
+
+          <div class="amount negative">- ₹1,200</div>
+        </div>
+
+        <div class="transaction">
+          <div class="transaction-left">
+            <div class="icon income-icon">🚀</div>
+
+            <div>
+              <div class="transaction-title">Freelance Project</div>
+              <div class="transaction-date">10 May • 11:10 AM</div>
+            </div>
+          </div>
+
+          <div class="amount positive">+ ₹12,000</div>
+        </div>
+
+      </div>
+
     </div>
 
   </div>
-
-  <script>
-    const form = document.getElementById("transaction-form");
-    const description = document.getElementById("description");
-    const amount = document.getElementById("amount");
-    const type = document.getElementById("type");
-
-    const balance = document.getElementById("balance");
-    const income = document.getElementById("income");
-    const expense = document.getElementById("expense");
-
-    const transactionList = document.getElementById("transaction-list");
-    const emptyMessage = document.getElementById("emptyMessage");
-
-    let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-
-    function saveTransactions() {
-      localStorage.setItem("transactions", JSON.stringify(transactions));
-    }
-
-    function updateUI() {
-
-      transactionList.innerHTML = "";
-
-      let totalIncome = 0;
-      let totalExpense = 0;
-
-      if (transactions.length === 0) {
-        emptyMessage.style.display = "block";
-      } else {
-        emptyMessage.style.display = "none";
-      }
-
-      transactions.forEach((transaction, index) => {
-
-        const div = document.createElement("div");
-        div.classList.add("transaction");
-        div.classList.add(transaction.type);
-
-        div.innerHTML = `
-          <div class="left">
-            <strong>${transaction.description}</strong>
-            <small>${transaction.type}</small>
-          </div>
-
-          <div>
-            ₹${transaction.amount}
-
-            <button class="delete-btn" onclick="deleteTransaction(${index})">
-              X
-            </button>
-          </div>
-        `;
-
-        transactionList.appendChild(div);
-
-        if (transaction.type === "income") {
-          totalIncome += transaction.amount;
-        } else {
-          totalExpense += transaction.amount;
-        }
-      });
-
-      const totalBalance = totalIncome - totalExpense;
-
-      income.innerText = `₹${totalIncome.toFixed(2)}`;
-      expense.innerText = `₹${totalExpense.toFixed(2)}`;
-      balance.innerText = `₹${totalBalance.toFixed(2)}`;
-
-      saveTransactions();
-    }
-
-    function deleteTransaction(index) {
-      transactions.splice(index, 1);
-      updateUI();
-    }
-
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const transaction = {
-        description: description.value,
-        amount: Number(amount.value),
-        type: type.value
-      };
-
-      transactions.push(transaction);
-
-      updateUI();
-
-      form.reset();
-    });
-
-    updateUI();
-  </script>
 
 </body>
 </html>
